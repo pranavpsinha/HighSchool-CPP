@@ -12,6 +12,7 @@ vector<int> inOrderData;
 vector<int> postOrderData;
 vector<int> levelOrderData;
 vector<int> boundaryData;
+vector<int> diagonalData;
 
 /*
 * Pre-Order Tree-Traversal
@@ -133,7 +134,7 @@ int travRight(node *rt) {
 	}
 }
 
-int boundary(node *root) {
+void boundary(node *root) {
 	node *bkp;
 	bkp = root;
 	travLeft(root); root = bkp;
@@ -141,6 +142,44 @@ int boundary(node *root) {
 	lastLeaf = boundaryData.at(boundaryData.size()-1);
 	//travRight(root->right);
 	travPre(root->right, root);
+}
+
+void diagonal(node *root) {
+	queue<node*> curr;
+	queue<node*> next;
+	
+	node *dryRun = root;
+	inOrder(dryRun);
+	
+	int numberOfNodes = inOrderData.size();
+	int nodesTraversed = 0;
+	
+	curr.push(root);
+	
+	while(nodesTraversed != numberOfNodes) {
+		while(!curr.empty()) {
+			node *me;
+			me = curr.front();
+			curr.pop();
+			
+			diagonalData.push_back(me->data);
+			
+			if(me->right != NULL) {
+				curr.push(me->right);
+			}
+			
+			if(me->left != NULL) {
+				next.push(me->left);
+			}
+			
+			nodesTraversed += 1;
+		}
+		
+		while(!next.empty()) {
+			curr.push(next.front());
+			next.pop();
+		}
+	}
 }
 
 
